@@ -1,0 +1,51 @@
+#!/usr/bin/env python
+# filename: shrinkpdf
+# description: A Python wrapper for the gs command, to reduce the filesize of PDFs
+# fileversion: 0.2
+# date: 20121212
+# author: Dayo Adewunmi
+# email: jargonsummary@gmail.com
+# license: GPLv3
+# python version: 2.7.3
+
+from optparse import OptionParser
+import os
+import subprocess
+
+def pdfexists(origpdf):
+    """ Check if there are any PDF files in the cwd. """
+    if os.path.isfile(origpdf):
+        splitOrigFilename = os.path.splitext(origpdf)
+        if splitOrigFilename[1] == ".pdf" or splitOrigFilename[1] == ".PDF":
+            return True
+
+    else:
+        return False
+
+def shrunkpdfexists(shrunkpdf):
+    """ Check if this is already a shrunk PDF file. """
+    if shrunkpdf[:5] == "spdf_":
+        return True
+    else:
+        return False
+
+def searchDir(sourcedir):
+    """ List all files and directories in the cwd. """
+    for filedir in os.listdir(sourcedir):
+        if pdfexists(filedir):
+            if shrunkpdfexists(filedir):
+                return False
+            else:
+                shrinkpdf(filedir)
+    
+def shrinkpdf(origpdf):
+    """Use subprocess.call() to call gs and shrink the PDF file, saving with 'outputfile'
+    as filename for newly shrunk PDF."""
+    shrunkpdfname = 'spdf_' + origpdf
+    subprocess.call(["gs", "-dNOPAUSE", "-dBATCH", "-sDEVICE=pdfwrite", "-dCompatibilityLevel=1.4", "-dPDFSETTINGS=/screen", "-sOutputFile=" + shrunkpdfname, origpdf])
+
+def main():
+    searchDir(os.getcwd())
+
+if __name__ == "__main__":
+    main()
