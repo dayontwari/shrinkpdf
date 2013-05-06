@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # filename: shrinkpdf
 # description: A Python wrapper for the gs command, to reduce the filesize of PDFs
-# fileversion: 0.2
-# date: 20121212
+# fileversion: 0.2.1
+# date: 20130506
 # author: Dayo Adewunmi
 # email: jargonsummary@gmail.com
 # license: GPLv3
@@ -16,9 +16,8 @@ def pdfexists(origpdf):
     """ Check if there are any PDF files in the cwd. """
     if os.path.isfile(origpdf):
         splitOrigFilename = os.path.splitext(origpdf)
-        if splitOrigFilename[1] == ".pdf" or splitOrigFilename[1] == ".PDF":
+        if splitOrigFilename[1].lower() == ".pdf":
             return True
-
     else:
         return False
 
